@@ -174,3 +174,5 @@ void *heap_desencolar(heap_t *heap) {
 	//heapify(heap->arreglo, heap->cantidad, heap->cmp);
 	return aux;
 }
+
+void heap_actualizar_prioridad(heap_t* heap, void* dato);
