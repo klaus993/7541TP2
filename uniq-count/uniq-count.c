@@ -18,11 +18,12 @@ void uniq_count(const char *dir) {
 	size_t size = 0;
 	size_t read;
 	int *temp;
+	char **splited;
 	while ((read = getline(&input, &size, file)) != -1) {
 		if (input[read - 1] == '\n') {
 			input[read - 1] = '\0';
 		}
-		char **splited = split(input, ' ');
+		splited = split(input, ' ');
 		unsigned i = 0;
 		while (splited[i] != NULL) {
 			if (!hash_pertenece(hash, splited[i])) {
@@ -39,13 +40,16 @@ void uniq_count(const char *dir) {
 		}
 	}
 	free(input);
-	while (!lista_esta_vacia(lista)) {
-		char *palabra = (char*)lista_borrar_primero(lista);
+	lista_iter_t *iter = lista_iter_crear(lista);
+	while (!lista_iter_al_final(iter)) {
+		char *palabra = (char*)lista_iter_ver_actual(iter);
 		printf("%d %s\n", *(int*)hash_obtener(hash, palabra), palabra);
+		lista_iter_avanzar(iter);
 	}
+	lista_iter_destruir(iter);
 
 	hash_destruir(hash);
-	lista_destruir(lista, NULL);
+	lista_destruir(lista, free);
 }
 
 int main(int argc, char *argv[]) {
