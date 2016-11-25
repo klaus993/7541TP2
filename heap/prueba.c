@@ -30,12 +30,13 @@ void pruebas_heap_alumno(void) {
 
     heap_actualizar_prioridad(heap, &x);
 
-
-    unsigned j = 0;
-    while (j < cant) {
-    	printf("%d, ", *(int*)heap->arreglo[i]);
-    	j++;
+    while (!heap_esta_vacio(heap)) {
+        printf("%d, ", *(int*)heap_desencolar(heap));        
     }
+
+    putchar('\n');
+    
+    heap_destruir(heap, NULL);
 
 
 }
