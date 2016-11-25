@@ -36,7 +36,7 @@ void *abb_obtener(const abb_t *arbol, const char *clave);
 Post: Si el elemento está en el abb, devuelve true, de lo contrario, false. */
 bool abb_pertenece(const abb_t *arbol, const char *clave);
 
-/* Pre: La estructura hash fue inicializada
+/* Pre: La estructura abb fue inicializada
 Post: devuelve la cantidad de elementos del abb. */
 size_t abb_cantidad(abb_t *arbol);
 
