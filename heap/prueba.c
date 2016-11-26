@@ -17,8 +17,7 @@ void pruebas_heap_alumno(void) {
 
     heap_t *heap = heap_crear_arr(elementos, 8, cmp);
 
-    int x = 37;
-    heap->arreglo[1] = &x;
+    //arr[1] = 6;
     size_t cant = heap_cantidad(heap);
     unsigned i = 0;
     while (i < cant) {
@@ -28,7 +27,7 @@ void pruebas_heap_alumno(void) {
 
     putchar('\n');
 
-    heap_actualizar_prioridad(heap, &x);
+    heap_actualizar_prioridad(heap, elementos[1]);
 
     while (!heap_esta_vacio(heap)) {
         printf("%d, ", *(int*)heap_desencolar(heap));        

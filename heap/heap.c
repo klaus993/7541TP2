@@ -178,7 +178,7 @@ void heap_actualizar_prioridad(heap_t* heap, void* dato) {
 	unsigned i = 0;
 	unsigned pos = -1;
 	while (i < heap->cantidad) {
-		if (*(int*)dato == *(int*)(heap->arreglo[i])) {
+		if (dato == heap->arreglo[i]) {
 			pos = i;
 		}
 		i++;
