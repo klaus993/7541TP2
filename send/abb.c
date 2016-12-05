@@ -24,6 +24,10 @@ struct abb_iter {
 	pila_t* pila;
 };
 
+typedef struct abb_iter_post {
+	pila_t* pila;
+} abb_iter_post_t;
+
 /* Recibe un puntero hacia un dato y crea un nodo con ese valor en caso de ser
 posible, y devuelve el nodo. Sino devuelve NULL. */
 nodo_abb_t* crear_nodo(const char *clave, void* dato){
@@ -170,7 +174,7 @@ bool abb_pertenece(const abb_t *arbol, const char *clave) {
 	return _buscar_nodo(arbol->raiz, arbol->cmp, clave, NULL) != NULL;
 }
 
-size_t abb_cantidad(abb_t *arbol) {
+size_t abb_cantidad(const abb_t *arbol) {
 	return arbol->cantidad;
 }
 
@@ -255,8 +259,8 @@ void apilar_traza_izquierda(pila_t* pila, nodo_abb_t* act) {
 	if(!act->izq && act->der) apilar_traza_izquierda(pila,act->der);
 }
 
-abb_iter_t *abb_iter_post_crear(const abb_t *arbol) {
-	abb_iter_t* iter = malloc(sizeof(abb_iter_t));
+abb_iter_post_t *abb_iter_post_crear(const abb_t *arbol) {
+	abb_iter_post_t* iter = malloc(sizeof(abb_iter_post_t));
 	if(!iter) return NULL;
 	pila_t* pila = pila_crear();
 	if(!pila) {
@@ -269,7 +273,7 @@ abb_iter_t *abb_iter_post_crear(const abb_t *arbol) {
 	return iter;
 }
 
-bool abb_iter_post_avanzar(abb_iter_t *iter) {
+bool abb_iter_post_avanzar(abb_iter_post_t *iter) {
 	if(pila_esta_vacia(iter->pila)) return false;
 	nodo_abb_t* ant = pila_desapilar(iter->pila);
 	nodo_abb_t* act = pila_ver_tope(iter->pila);
@@ -279,16 +283,16 @@ bool abb_iter_post_avanzar(abb_iter_t *iter) {
 	return true;
 }
 
-const char *abb_iter_post_ver_actual(const abb_iter_t *iter) {
+const char *abb_iter_post_ver_actual(const abb_iter_post_t *iter) {
 	if(abb_iter_post_al_final(iter)) return NULL;
 	return ((nodo_abb_t*)pila_ver_tope(iter->pila))->clave;
 }
 
-bool abb_iter_post_al_final(const abb_iter_t *iter) {
+bool abb_iter_post_al_final(const abb_iter_post_t *iter) {
 	return pila_esta_vacia(iter->pila);
 }
 
-void abb_iter_post_destruir(abb_iter_t* iter) {
+void abb_iter_post_destruir(abb_iter_post_t* iter) {
 	pila_destruir(iter->pila);
 	free(iter);
 }
@@ -307,4 +311,21 @@ void _iterar_post_order(nodo_abb_t* nodo, bool visitar(const char *, void *, voi
 
 void abb_post_order(abb_t *arbol, bool visitar(const char *, void *, void *), void *extra) {
 	_iterar_post_order(arbol->raiz, visitar, extra);
+}
+
+abb_item_t* abb_obtener_items(const abb_t* abb) {
+	if (abb_cantidad(abb) == 0) {
+		return NULL;
+	}
+	abb_item_t *items = malloc(sizeof(abb_item_t) * abb_cantidad(abb));
+	abb_iter_t *iter = abb_iter_in_crear(abb);
+	unsigned i = 0;
+	while (!abb_iter_in_al_final(iter)) {
+		items[i].clave = abb_iter_in_ver_actual(iter);
+		items[i].valor = abb_obtener(abb, items[i].clave);
+		abb_iter_in_avanzar(iter);
+		i++;
+	}
+	abb_iter_in_destruir(iter);
+	return items;
 }

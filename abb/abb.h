@@ -36,7 +36,7 @@ void *abb_obtener(const abb_t *arbol, const char *clave);
 Post: Si el elemento está en el abb, devuelve true, de lo contrario, false. */
 bool abb_pertenece(const abb_t *arbol, const char *clave);
 
-/* Pre: La estructura abb fue inicializada
+/* Pre: La estructura hash fue inicializada
 Post: devuelve la cantidad de elementos del abb. */
 size_t abb_cantidad(abb_t *arbol);
 
@@ -75,5 +75,46 @@ bool abb_iter_in_al_final(const abb_iter_t *iter);
 
 // Destruye iterador.
 void abb_iter_in_destruir(abb_iter_t* iter);
+
+/*ITEADOR POST ORDER */
+
+/* INTERNO */
+// Itera sobre el abb de manera post order y lo modifica mediante la función visitar 
+// recibida por parámetro. Recibe un puntero extra para hacer con el lo que se 
+// prefiera.
+// Pre: el abb fue creado. Visitar es una función capaz de modificar los
+// elementos del abb.
+// Post: se modificaron todos los elementos del abb según lo que hace
+// la función visitar.
+void abb_post_order(abb_t *arbol, bool visitar(const char *, void *, void *), void *extra);
+
+/*EXTERNO*/
+
+// Crea iterador.
+abb_iter_t *abb_iter_post_crear(const abb_t *arbol);
+
+// Avanza iterador.
+bool abb_iter_post_avanzar(abb_iter_t *iter);
+
+// Devuelve clave actual, esa clave no se puede modificar ni liberar.
+const char *abb_iter_post_ver_actual(const abb_iter_t *iter);
+
+// Comprueba si terminó la iteración.
+bool abb_iter_post_al_final(const abb_iter_t *iter);
+
+// Destruye iterador.
+void abb_iter_post_destruir(abb_iter_t* iter);
+
+/*******                   *******/
+
+// Estructura pública utilizada para almacenar items contenidos en el abb (clave, valor)
+typedef struct abb_item {
+    const char* clave;
+    void* valor;
+} abb_item_t;
+
+// Recibe un puntero a un abb y devuelve un puntero a un arreglo de abb_item_t conteniendo todos los items del abb
+// ordenados por clave. Si el abb está vacío, devuelve NULL.
+abb_item_t* abb_obtener_items(abb_t* abb);
 
 #endif

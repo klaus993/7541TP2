@@ -1,4 +1,4 @@
-#include "heap.c"
+#include "../heap/heap.c"
 #include <stdio.h>
 
 int cmp(const void* a, const void* b) {

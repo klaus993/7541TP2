@@ -179,7 +179,7 @@ void abb_destruir(abb_t *arbol) {
 	free(arbol);
 }
 
-//PRIMITIVAS DEL ITERADOR EXTERNO DEL ÁRBOL.
+//PRIMITIVAS DEL ITERADOR EXTERNO IN ORDER DEL ÁRBOL.
 
 abb_iter_t *abb_iter_in_crear(const abb_t *arbol) {
 	abb_iter_t* iter = malloc(sizeof(abb_iter_t));
@@ -230,17 +230,97 @@ void abb_iter_in_destruir(abb_iter_t* iter) {
 	free(iter);
 }
 
-//PRIMITIVA DEL ITERADOR INTERNO DEL ÁRBOL.
+//PRIMITIVA DEL ITERADOR INTERNO IN ORDER DEL ÁRBOL.
 
 /* Recibe un puntero a una raíz de un árbol, una función visitar y un puntero extra para hacer con
 él lo que se prefiera. */
-void _iterar_in_order(nodo_abb_t* nodo, bool visitar(const char *, void *, void *), void *extra) {
-	if(!nodo) return;
-	_iterar_in_order(nodo->izq, visitar, extra);
-	if (!visitar(nodo->clave, nodo->valor, extra)) return;
-	_iterar_in_order(nodo->der, visitar, extra);
+bool _iterar_in_order(nodo_abb_t* nodo, bool visitar(const char *, void *, void *), void *extra) {
+	if(!nodo) return true;
+	if (!_iterar_in_order(nodo->izq, visitar, extra)) return false;
+	if (!visitar(nodo->clave, nodo->valor, extra)) return false;
+	if (!_iterar_in_order(nodo->der, visitar, extra)) return false;
 }
 
 void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void *extra) {
 	_iterar_in_order(arbol->raiz, visitar, extra);
+}
+
+//PRIMITIVA DEL ITERADOR EXTERNO POST ORDER DEL ÁRBOL.
+
+/*Recibe una pila y un nodo del árbol. Apila toda su traza izquierda. */
+void apilar_traza_izquierda(pila_t* pila, nodo_abb_t* act) {
+	if(!act) return;
+	pila_apilar(pila,act);
+	apilar_traza_izquierda(pila,act->izq);
+	if(!act->izq && act->der) apilar_traza_izquierda(pila,act->der);
+}
+
+abb_iter_t *abb_iter_post_crear(const abb_t *arbol) {
+	abb_iter_t* iter = malloc(sizeof(abb_iter_t));
+	if(!iter) return NULL;
+	pila_t* pila = pila_crear();
+	if(!pila) {
+		free(iter);
+		return NULL;
+	}
+	iter->pila = pila;
+	nodo_abb_t* act = arbol->raiz; 
+	apilar_traza_izquierda(iter->pila, act);
+	return iter;
+}
+
+bool abb_iter_post_avanzar(abb_iter_t *iter) {
+	if(pila_esta_vacia(iter->pila)) return false;
+	nodo_abb_t* ant = pila_desapilar(iter->pila);
+	nodo_abb_t* act = pila_ver_tope(iter->pila);
+	if(act && ant == act->izq) {
+		apilar_traza_izquierda(iter->pila, act->der);
+	}
+	return true;
+}
+
+const char *abb_iter_post_ver_actual(const abb_iter_t *iter) {
+	if(abb_iter_post_al_final(iter)) return NULL;
+	return ((nodo_abb_t*)pila_ver_tope(iter->pila))->clave;
+}
+
+bool abb_iter_post_al_final(const abb_iter_t *iter) {
+	return pila_esta_vacia(iter->pila);
+}
+
+void abb_iter_post_destruir(abb_iter_t* iter) {
+	pila_destruir(iter->pila);
+	free(iter);
+}
+
+//PRIMITIVA DEL ITERADOR INTERNO DEL ÁRBOL.
+
+/* Recibe un puntero a una raíz de un árbol, una función visitar para modificar 
+los subárboles ubicados por debajo de la raíz y un puntero extra para hacer con
+él lo que se prefiera. */
+bool _iterar_post_order(nodo_abb_t* nodo, bool visitar(const char *, void *, void *), void *extra) {
+	if(!nodo) return true;
+	if (!_iterar_post_order(nodo->izq,visitar, extra)) return false;
+	if (!_iterar_post_order(nodo->der, visitar, extra)) return false;
+	if(!visitar(nodo->clave, nodo->valor, extra)) return false;
+}
+
+void abb_post_order(abb_t *arbol, bool visitar(const char *, void *, void *), void *extra) {
+	_iterar_post_order(arbol->raiz, visitar, extra);
+}
+
+bool almacenar(const char *clave, void *valor, void *items) {
+	(abb_item_t*)items[i].clave = clave;
+	(abb_item_t*)items[i].valor = valor;
+	return true;
+}
+
+abb_item_t* abb_obtener_items(abb_t* abb) {
+	if (abb_cantidad(abb) == 0) {
+		return NULL;
+	}
+	abb_item_t *items = malloc(sizeof(abb_item_t) * abb_cantidad(abb));
+	abb_iter_t *iter = abb_iter_in_crear(abb);
+	abb_in_order(abb, almacenar, (void*)items);
+	return items;
 }

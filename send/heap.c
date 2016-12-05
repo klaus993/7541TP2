@@ -171,6 +171,28 @@ void *heap_desencolar(heap_t *heap) {
 		heap_redimensionar(heap, heap->capacidad / 2);
 	}
 	downheap(heap->arreglo, heap->cantidad, 0, heap->cmp);
-	//heapify(heap->arreglo, heap->cantidad, heap->cmp);
 	return aux;
+}
+
+void heap_actualizar_prioridad(heap_t* heap, void* dato) {
+	unsigned i = 0;
+	unsigned pos = -1;
+	while (i < heap->cantidad) {
+		if (dato == heap->arreglo[i]) {
+			pos = i;
+		}
+		i++;
+	}
+	if (pos == -1) {
+		return;
+	}
+	size_t pos_padre = (pos - 1) / 2;
+	size_t pos_izq = pos * 2 + 1;
+	size_t pos_der = pos * 2 + 2;
+	if ((pos_izq < heap->cantidad && heap->cmp(heap->arreglo[pos], heap->arreglo[pos_izq]) < 0) || 
+			(pos_der < heap->cantidad && heap->cmp(heap->arreglo[pos], heap->arreglo[pos_der]) < 0)) {
+		downheap(heap->arreglo, heap->cantidad, pos, heap->cmp);
+	} else if (pos_padre >= 0 && heap->cmp(heap->arreglo[pos], heap->arreglo[pos_padre]) > 0) {
+		upheap(heap->arreglo, pos, heap->cmp);
+	}
 }

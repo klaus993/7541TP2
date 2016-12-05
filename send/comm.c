@@ -1,5 +1,5 @@
 #define _POSIX_C_SOURCE 200809L
-#include "../hash/hash.h"
+#include "hash.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

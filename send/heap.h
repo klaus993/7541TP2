@@ -82,6 +82,14 @@ void *heap_ver_max(const heap_t *heap);
  */
 void *heap_desencolar(heap_t *heap);
 
+/* Recibe un puntero a un heap, y otro a un dato que haya sido cambiado.
+Busca dicho dato en el heap y actualiza su prioridad, modificando su posición en el heap
+según corresponda.
+Pre: el dato fue modificado tras encolarlo en el heap.
+Post: el dato se encuentra nuevamente acomodado.
+*/
+}
+void heap_actualizar_prioridad(heap_t* heap, void* dato);
 
 void pruebas_heap_alumno(void);
 

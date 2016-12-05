@@ -5,7 +5,7 @@
 #include <string.h>
 #include "lista.h"
 #include "strutil.h"
-#include "../hash/hash.h"
+#include "hash.h"
 
 #define USAGE "Uso: %s [ARCHIVO]\n"
 #define FILE_ERROR "%s error: el archivo %s no existe.\n"
