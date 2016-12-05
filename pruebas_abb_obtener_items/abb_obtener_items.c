@@ -16,8 +16,8 @@ int main() {
 	abb_item_t *items = abb_obtener_items(abb);
 
 	for (int i = 0; i < 3; i++) {
-		printf("%s\n", items[i].clave);
-		printf("%s\n", (char*)items[i].valor);
+		printf("Clave: %s\n", items[i].clave);
+		printf("Valor: %s\n", (char*)items[i].valor);
 	}
 
 	return 0;

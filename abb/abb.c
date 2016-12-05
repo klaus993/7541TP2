@@ -221,6 +221,13 @@ const char *abb_iter_in_ver_actual(const abb_iter_t *iter) {
 	return ((nodo_abb_t*)pila_ver_tope(iter->pila))->clave;
 }
 
+void *abb_iter_in_ver_valor_actual(const abb_iter_t *iter) {
+	if (abb_iter_in_al_final(iter)) {
+		return NULL;
+	}
+	return ((nodo_abb_t*)pila_ver_tope(iter->pila))->valor;
+}
+
 bool abb_iter_in_al_final(const abb_iter_t *iter) {
 	return pila_esta_vacia(iter->pila);
 }
@@ -233,12 +240,14 @@ void abb_iter_in_destruir(abb_iter_t* iter) {
 //PRIMITIVA DEL ITERADOR INTERNO IN ORDER DEL ÁRBOL.
 
 /* Recibe un puntero a una raíz de un árbol, una función visitar y un puntero extra para hacer con
-él lo que se prefiera. */
+él lo que se prefiera. Devuelve un booleano así se puede cortar con la iteración en el momento en
+el que visitar devuelva false.*/
 bool _iterar_in_order(nodo_abb_t* nodo, bool visitar(const char *, void *, void *), void *extra) {
 	if(!nodo) return true;
 	if (!_iterar_in_order(nodo->izq, visitar, extra)) return false;
 	if (!visitar(nodo->clave, nodo->valor, extra)) return false;
 	if (!_iterar_in_order(nodo->der, visitar, extra)) return false;
+	return false;
 }
 
 void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void *extra) {
@@ -303,6 +312,7 @@ bool _iterar_post_order(nodo_abb_t* nodo, bool visitar(const char *, void *, voi
 	if (!_iterar_post_order(nodo->izq,visitar, extra)) return false;
 	if (!_iterar_post_order(nodo->der, visitar, extra)) return false;
 	if(!visitar(nodo->clave, nodo->valor, extra)) return false;
+	return false;
 }
 
 void abb_post_order(abb_t *arbol, bool visitar(const char *, void *, void *), void *extra) {
@@ -310,8 +320,10 @@ void abb_post_order(abb_t *arbol, bool visitar(const char *, void *, void *), vo
 }
 
 bool almacenar(const char *clave, void *valor, void *items) {
-	(abb_item_t*)items[i].clave = clave;
-	(abb_item_t*)items[i].valor = valor;
+	abb_item_t** item = items;
+	(*item)->clave = clave;
+	(*item)->valor = valor;
+	(*item)++;
 	return true;
 }
 
@@ -320,7 +332,25 @@ abb_item_t* abb_obtener_items(abb_t* abb) {
 		return NULL;
 	}
 	abb_item_t *items = malloc(sizeof(abb_item_t) * abb_cantidad(abb));
-	abb_iter_t *iter = abb_iter_in_crear(abb);
-	abb_in_order(abb, almacenar, (void*)items);
+	abb_item_t *iter = items;
+	abb_in_order(abb, almacenar, &iter);
 	return items;
 }
+
+// abb_item_t* abb_obtener_items(abb_t* abb) {
+// 	if (abb_cantidad(abb) == 0) {
+// 		return NULL;
+// 	}
+// 	abb_item_t *items = malloc(sizeof(abb_item_t) * abb_cantidad(abb));
+// 	abb_iter_t *iter = abb_iter_in_crear(abb);
+// 	unsigned i = 0;
+// 	while (!abb_iter_in_al_final(iter)) {
+// 		items[i].clave = abb_iter_in_ver_actual(iter);
+// 		items[i].valor = abb_iter_in_ver_valor_actual(iter);
+// 		abb_iter_in_avanzar(iter);
+// 		i++;
+// 	}
+// 	abb_iter_in_destruir(iter);
+// 	return items;
+
+// }
