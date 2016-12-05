@@ -323,7 +323,7 @@ bool almacenar(const char *clave, void *valor, void *items) {
 	abb_item_t** item = items;
 	(*item)->clave = clave;
 	(*item)->valor = valor;
-	(*(abb_item_t**)items)++;
+	(*((abb_item_t**)items))++;
 	return true;
 }
 
@@ -332,8 +332,8 @@ abb_item_t* abb_obtener_items(abb_t* abb) {
 		return NULL;
 	}
 	abb_item_t *items = malloc(sizeof(abb_item_t) * abb_cantidad(abb));
-	abb_item_t *iter = items;
-	abb_in_order(abb, almacenar, &iter);
+	abb_item_t *aux = items;
+	abb_in_order(abb, almacenar, &aux);
 	return items;
 }
 

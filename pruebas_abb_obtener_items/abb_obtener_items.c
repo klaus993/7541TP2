@@ -14,8 +14,8 @@ int main() {
     abb_guardar(abb, clave3, valor3);
 
 	abb_item_t *items = abb_obtener_items(abb);
-
-	for (int i = 0; i < 3; i++) {
+	unsigned i;
+	for (i = 0; i < 3; i++) {
 		printf("Clave: %s\n", items[i].clave);
 		printf("Valor: %s\n", (char*)items[i].valor);
 	}
