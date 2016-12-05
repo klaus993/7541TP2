@@ -323,7 +323,7 @@ bool almacenar(const char *clave, void *valor, void *items) {
 	abb_item_t** item = items;
 	(*item)->clave = clave;
 	(*item)->valor = valor;
-	(*item)++;
+	(*(abb_item_t**)items)++;
 	return true;
 }
 
