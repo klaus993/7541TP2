@@ -10,6 +10,8 @@
 #define USAGE "Uso: %s [ARCHIVO]\n"
 #define FILE_ERROR "%s error: el archivo %s no existe.\n"
 
+/*Función que recibe el puntero a un archivo e imprime todas las palabras que lo
+conforman junto a la cantidad de apariciones de la misma. */
 void uniq_count(const char *dir) {
 	FILE *file = fopen(dir, "r");
 	hash_t *hash = hash_crear(free);
