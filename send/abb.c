@@ -331,6 +331,6 @@ abb_item_t* abb_obtener_items(const abb_t* abb) {
 	}
 	abb_item_t *items = malloc(sizeof(abb_item_t) * abb_cantidad(abb));
 	abb_item_t *aux = items;
-	abb_in_order(abb, almacenar, &aux);
+	_iterar_in_order(abb->raiz, almacenar, &aux);
 	return items;
 }
