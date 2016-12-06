@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "../abb/abb.h"
 
 int main() {
@@ -19,6 +20,9 @@ int main() {
 		printf("Clave: %s\n", items[i].clave);
 		printf("Valor: %s\n", (char*)items[i].valor);
 	}
+
+	free(items);
+	abb_destruir(abb);
 
 	return 0;
 }
