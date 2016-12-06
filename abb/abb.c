@@ -221,13 +221,6 @@ const char *abb_iter_in_ver_actual(const abb_iter_t *iter) {
 	return ((nodo_abb_t*)pila_ver_tope(iter->pila))->clave;
 }
 
-void *abb_iter_in_ver_valor_actual(const abb_iter_t *iter) {
-	if (abb_iter_in_al_final(iter)) {
-		return NULL;
-	}
-	return ((nodo_abb_t*)pila_ver_tope(iter->pila))->valor;
-}
-
 bool abb_iter_in_al_final(const abb_iter_t *iter) {
 	return pila_esta_vacia(iter->pila);
 }
@@ -336,21 +329,3 @@ abb_item_t* abb_obtener_items(abb_t* abb) {
 	abb_in_order(abb, almacenar, &aux);
 	return items;
 }
-
-// abb_item_t* abb_obtener_items(abb_t* abb) {
-// 	if (abb_cantidad(abb) == 0) {
-// 		return NULL;
-// 	}
-// 	abb_item_t *items = malloc(sizeof(abb_item_t) * abb_cantidad(abb));
-// 	abb_iter_t *iter = abb_iter_in_crear(abb);
-// 	unsigned i = 0;
-// 	while (!abb_iter_in_al_final(iter)) {
-// 		items[i].clave = abb_iter_in_ver_actual(iter);
-// 		items[i].valor = abb_iter_in_ver_valor_actual(iter);
-// 		abb_iter_in_avanzar(iter);
-// 		i++;
-// 	}
-// 	abb_iter_in_destruir(iter);
-// 	return items;
-
-// }

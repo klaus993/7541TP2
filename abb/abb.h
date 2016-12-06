@@ -114,7 +114,7 @@ typedef struct abb_item {
 } abb_item_t;
 
 // Recibe un puntero a un abb y devuelve un puntero a un arreglo de abb_item_t conteniendo todos los items del abb
-// ordenados por clave. Si el abb está vacío, devuelve NULL.
+// ordenados por clave. Si el abb está vacío, devuelve NULL. El arreglo debe liberarse con free una vez utilizado.
 abb_item_t* abb_obtener_items(abb_t* abb);
 
 #endif
