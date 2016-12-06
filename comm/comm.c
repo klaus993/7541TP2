@@ -4,6 +4,9 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define DIFS_ARCH1 "-1"
+#define DIFS_ARCH2 "-2"
+
 /*Recibe dos archivos y un booleano imprimir_coincidencias, y según su valor,
 imprime las líneas que coinciden de los dos archivos o las que no coinciden del
 segundo archivo pasado por parámetro. */
@@ -11,15 +14,14 @@ void comm(FILE *file1, FILE *file2, bool imprimir_coincidencias) {
 	char* lineafile1 = NULL;
 	size_t capacidadfile1 = 0;
 	hash_t* hash1 = hash_crear(NULL);
-	while(true) {
-		ssize_t longitudfile1 = getline(&lineafile1, &capacidadfile1, file1);
+	ssize_t longitudfile1;
+	while((longitudfile1 = getline(&lineafile1, &capacidadfile1, file1)) != -1) {
 		hash_guardar(hash1, lineafile1, NULL);
-		if(longitudfile1 == -1) break;
 	}
 	char* lineafile2 = NULL;
 	size_t capacidadfile2 = 0;
-	while(true) {
-		ssize_t longitudfile2 = getline(&lineafile2, &capacidadfile2, file2);
+	ssize_t longitudfile2;
+	while((longitudfile2 = getline(&lineafile2, &capacidadfile2, file2)) != -1) {
 		if(imprimir_coincidencias) {
 			if(hash_pertenece(hash1, lineafile2)) {
 				hash_borrar(hash1, lineafile2);
@@ -32,7 +34,6 @@ void comm(FILE *file1, FILE *file2, bool imprimir_coincidencias) {
 				fprintf(stdout,"%s", lineafile2);
 			}
 		}
-		if(longitudfile2 == -1) break;
 	}
 	free(lineafile1);
 	free(lineafile2);
@@ -55,11 +56,9 @@ int main(int argc, char *argv[]) {
 		fclose(file1);
 		return EXIT_FAILURE;
 	}
-	char *opcion1 = "-1"; 
-	char *opcion2 = "-2";
 	if(argc == 4) {
-		if(strcmp(argv[3], opcion1) == 0) comm(file2, file1, false);
-		else if(strcmp(argv[3], opcion2) == 0) comm(file1, file2, false);
+		if(strcmp(argv[3], DIFS_ARCH1) == 0) comm(file2, file1, false);
+		else if(strcmp(argv[3], DIFS_ARCH2) == 0) comm(file1, file2, false);
 		else fprintf(stderr, "El tercer argumento no es válido.\n");
 		return -1;
 	}
