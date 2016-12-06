@@ -247,7 +247,7 @@ bool _iterar_in_order(nodo_abb_t* nodo, bool visitar(const char *, void *, void 
 	if (!_iterar_in_order(nodo->izq, visitar, extra)) return false;
 	if (!visitar(nodo->clave, nodo->valor, extra)) return false;
 	if (!_iterar_in_order(nodo->der, visitar, extra)) return false;
-	return false;
+	return true;
 }
 
 void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void *extra) {
